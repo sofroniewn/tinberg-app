@@ -1,4 +1,4 @@
-var viz = require('../../tinberg-vis-mvr')()
+var viz = require('../../tinberg-exp-mvr/visualization/index.js')()
 var IPCStream = require('electron-ipc-stream')
 var ipcsD = new IPCStream('behavior')
 var ipcsT = new IPCStream('trial')
