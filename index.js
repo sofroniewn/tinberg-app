@@ -28,7 +28,7 @@ var controlWindow = null
 function createControlWindow() {
   controlWindow = new BrowserWindow({
     width: 230,
-    height: 300,
+    height: 800,
     x: 0,
     y: 0
   })
@@ -42,11 +42,11 @@ function createControlWindow() {
 var experimentWindow = null
 function createExperimentWindow() {
   experimentWindow = new BrowserWindow({
-    width: 600,
+    width: 1050,
     height: 800,
     resizable: false,
     frame: false,
-    x: 600,
+    x: 234,
     y: 0
   })
   experimentWindow.loadURL(`file://${__dirname}/experiment-window/index.html`)
