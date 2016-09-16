@@ -24,37 +24,20 @@ console.log('  -l', program.logging)
 var app = electron.app
 var BrowserWindow = electron.BrowserWindow
 
-var controlWindow = null
-function createControlWindow() {
-  controlWindow = new BrowserWindow({
-    width: 230,
-    height: 800,
+var mainWindow = null
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1780,
+    height: 836,
     x: 0,
     y: 0
   })
-  controlWindow.loadURL(`file://${__dirname}/control-window/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/renderer/index.html`)
 
-  controlWindow.on('closed', function () {
-    controlWindow = null
+  mainWindow.on('closed', function () {
+    mainWindow = null
   })
 }
-
-var experimentWindow = null
-function createExperimentWindow() {
-  experimentWindow = new BrowserWindow({
-    width: 1050,
-    height: 800,
-    resizable: false,
-    frame: false,
-    x: 234,
-    y: 0
-  })
-  experimentWindow.loadURL(`file://${__dirname}/experiment-window/index.html`)
-  experimentWindow.on('closed', function () {
-    experimentWindow = null
-  })
-}
-
 
 
 var experiment = require(program.experiment)()
@@ -74,18 +57,17 @@ behaviorStream.pipe(deviceStream)
 var logging = require('time-stream')
 
 app.on('ready', function() {
-  createExperimentWindow()
-  createControlWindow()
+  createWindow()
 
-  var ipcsTrials = new ipcStream('trial', experimentWindow)
-  var ipcsBehavior = new ipcStream('behavior', experimentWindow)
+  var ipcsTrials = new ipcStream('trial', mainWindow)
+  var ipcsBehavior = new ipcStream('behavior', mainWindow)
 
   behaviorStream.pipe(ipcsBehavior)
   trialStream.pipe(ipcsTrials)
 
-  controlWindow.webContents.on('did-finish-load', function () {
-    controlWindow.webContents.send('initList', trials)
-    controlWindow.webContents.send('initOrder', [0, 1, 0])
+  mainWindow.webContents.on('did-finish-load', function () {
+    mainWindow.webContents.send('initList', trials)
+    mainWindow.webContents.send('initOrder', [0, 1, 0])
   })
 
   var resetFlag = true
@@ -158,15 +140,15 @@ app.on('ready', function() {
       if (used.indexOf(sessionNumber) !== -1) {
         sessionNumber = used[used.length-1]+1
       }
-      controlWindow.webContents.send('number', sessionNumber)
+      mainWindow.webContents.send('number', sessionNumber)
     })
   })
 
   trialStream.on('data', function (data) {
-    if (!data.init) controlWindow.webContents.send('nextTrial', data.trial.key)
+    if (!data.init) mainWindow.webContents.send('nextTrial', data.trial.key)
   })
 
-  experimentWindow.on('close', function () {
+  mainWindow.on('close', function () {
     behaviorStream.pause()
     trialStream.pause()
   })
@@ -183,10 +165,7 @@ app.on('window-all-closed', function () {
 })
 
 app.on('activate', function () {
-  if (controlWindow === null) {
-    createControlWindow()
-  }
-  if (experimentWindow === null) {
-    createExperimentWindow()
+  if (mainWindow === null) {
+    createWindow()
   }
 })

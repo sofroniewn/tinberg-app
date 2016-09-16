@@ -1,11 +1,17 @@
 var ipcRenderer = require('electron').ipcRenderer
 var debounce = require('lodash.debounce')
 
+var controlPanel = document.createElement('div')
+controlPanel.width = 200
+controlPanel.height = 800
+controlPanel.style.float = 'left'
+controlPanel.style.marginLeft = '5px'
+document.body.appendChild(controlPanel)
 
 var reset = document.createElement('BUTTON')
 var resetText = document.createTextNode('reset')
 reset.appendChild(resetText)
-document.body.appendChild(reset)
+controlPanel.appendChild(reset)
 
 
 var playState = true
@@ -13,22 +19,22 @@ var timeStart = Date.now()
 var play = document.createElement('BUTTON')
 var playT = document.createTextNode('play')
 play.appendChild(playT)
-document.body.appendChild(play)
+controlPanel.appendChild(play)
 
 
-document.body.appendChild(document.createTextNode('logging'))
+controlPanel.appendChild(document.createTextNode('logging'))
 var logging = document.createElement('INPUT')
 logging.setAttribute('type', 'checkbox')
-document.body.appendChild(logging)
+controlPanel.appendChild(logging)
 logging.onclick = function () {
   ipcRenderer.send('logging', logging.checked)
 }
 
-document.body.appendChild(document.createTextNode('session'))
+controlPanel.appendChild(document.createTextNode('session'))
 var number = document.createElement('INPUT')
 number.setAttribute('type', 'number')
 number.value = 0
-document.body.appendChild(number)
+controlPanel.appendChild(number)
 ipcRenderer.send('number', number.value)
 number.oninput = debounce(function () {
   ipcRenderer.send('number', number.value)
@@ -41,7 +47,7 @@ ipcRenderer.on('number', function (event, data) {
 var advance = document.createElement('BUTTON')
 var advanceT = document.createTextNode('advance')
 advance.appendChild(advanceT)
-document.body.appendChild(advance)
+controlPanel.appendChild(advance)
 function advanceFunc() {
   ipcRenderer.send('advance')
 }
@@ -58,7 +64,7 @@ ipcRenderer.on('initList', function (event, data) {
     trial.appendChild(document.createTextNode(el))
     list.appendChild(trial)
   })
-  document.body.appendChild(list)
+  controlPanel.appendChild(list)
 })
 
 var curTrial = 0
@@ -73,7 +79,7 @@ ipcRenderer.on('initOrder', function (event, data) {
     trial.appendChild(document.createTextNode(listOfAllTrials[el]))
     order.appendChild(trial)
   })
-  document.body.appendChild(order)
+  controlPanel.appendChild(order)
   ipcRenderer.send('initTrial', order.childNodes[curTrial].innerHTML)
   ipcRenderer.send('nextTrial', order.childNodes[curTrial+1].innerHTML)
 })
@@ -129,3 +135,24 @@ reset.onclick = function () {
   }
   ipcRenderer.send('logging', logging.checked)
 }
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+var viz = require('../../tinberg-exp-mvr/visualization/index.js')()
+var IPCStream = require('electron-ipc-stream')
+var ipcsD = new IPCStream('behavior')
+var ipcsT = new IPCStream('trial')
+var ipcRenderer = require('electron').ipcRenderer
+
+var stream = null
+var waiting = true
+ipcsT.on('data', function (data) {
+  if (waiting) {
+    stream = viz.createStream(data.maze)
+    ipcsD.pipe(stream)
+    waiting = false
+  } else {
+    viz.updateTrial(data.maze)
+  }
+})
