@@ -38,9 +38,9 @@ function createWindow() {
 }
 
 
-var experiment = require(program.experiment)()
-var trials = experiment.getTrials()
-var encoders = experiment.getEncoders()
+var experiment = require(program.experiment)
+var trials = experiment.trials()
+var encoders = experiment.encoders()
 var streams = experiment.create() //these initialize with no input???
 var device = require(program.device)()
 var deviceStream = device.createStream()

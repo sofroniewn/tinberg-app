@@ -19,7 +19,7 @@ console.log('  -l', program.logging)
 
 
 var controlPanel = require('./controlPanel.js')()
-var experiment = require('../' + program.experiment)()
+var experiment = require('../' + program.experiment)
 var viz = experiment.visualization()
 
 var stream = null
