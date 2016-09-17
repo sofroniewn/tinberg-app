@@ -11,14 +11,12 @@ var jsonfile = require('jsonfile')
 program
   .option('-e, --experiment [name]', 'Name of experiment', './experiment')
   .option('-d, --device [name]', 'Name of device', './device')
-  .option('-v, --visualization [name]', 'Name of visualization', './visualization')
   .option('-l, --logging [name]', 'Name of logging', './logs')
   .parse(process.argv)
 
 console.log('Launching app with:')
 console.log('  -e', program.experiment)
 console.log('  -d', program.device)
-console.log('  -v', program.visualization)
 console.log('  -l', program.logging)
 
 var app = electron.app
