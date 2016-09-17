@@ -41,14 +41,12 @@ function createWindow() {
 var experiment = require(program.experiment)
 var trials = experiment.trials()
 var encoders = experiment.encoders()
-var streams = experiment.create() //these initialize with no input???
+var streams = experiment.create()
 var device = require(program.device)()
-var deviceStream = device.createStream()
+var deviceStream = device.create()
   
 var behaviorStream = deviceStream.pipe(streams.behavior)
 behaviorStream.pipe(deviceStream)
-
-///////////// experimentWindow has the visualization for the experiment !!!!! program.visualization
 
 
 var logging = require('time-stream')
