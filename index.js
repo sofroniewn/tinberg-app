@@ -63,7 +63,7 @@ app.on('ready', function() {
   streams.trial.pipe(ipcsTrials)
 
   mainWindow.webContents.on('did-finish-load', function () {
-    mainWindow.webContents.send('initList', trials)
+    mainWindow.webContents.send('initList', Object.keys(trials))
     mainWindow.webContents.send('initOrder', [0, 1, 0])
   })
 
@@ -82,8 +82,8 @@ app.on('ready', function() {
   ipcMain.on('play', function () {
     console.log('play')
     if (resetFlag) {
-      streams.startTrial(initKey)
-      streams.setNextTrial(nextKey)
+      streams.startTrial(trials[initKey])
+      streams.setNextTrial(trials[nextKey])
     }
     device.start()
   })
@@ -102,7 +102,7 @@ app.on('ready', function() {
   var nextKey = null
   ipcMain.on('nextTrial', function (event, key) {
     nextKey = key
-    streams.setNextTrial(key)
+    streams.setNextTrial(trials[key])
   })
 
   var loggingFlag = false
