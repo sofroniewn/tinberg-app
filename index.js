@@ -41,12 +41,11 @@ function createWindow() {
 var experiment = require(program.experiment)()
 var trials = experiment.getTrials()
 var encoders = experiment.getEncoders()
-var behaviorThroughStream = experiment.createBehaviorStream() //these initialize with no input???
-var trialStream = experiment.trialStream //these initialize with no input???
+var streams = experiment.create() //these initialize with no input???
 var device = require(program.device)()
 var deviceStream = device.createStream()
   
-var behaviorStream = deviceStream.pipe(behaviorThroughStream)
+var behaviorStream = deviceStream.pipe(streams.behavior)
 behaviorStream.pipe(deviceStream)
 
 ///////////// experimentWindow has the visualization for the experiment !!!!! program.visualization
@@ -61,7 +60,7 @@ app.on('ready', function() {
   var ipcsBehavior = new ipcStream('behavior', mainWindow)
 
   behaviorStream.pipe(ipcsBehavior)
-  trialStream.pipe(ipcsTrials)
+  streams.trial.pipe(ipcsTrials)
 
   mainWindow.webContents.on('did-finish-load', function () {
     mainWindow.webContents.send('initList', trials)
@@ -83,8 +82,8 @@ app.on('ready', function() {
   ipcMain.on('play', function () {
     console.log('play')
     if (resetFlag) {
-      experiment.startTrial(initKey)
-      experiment.setNextTrial(nextKey)
+      streams.startTrial(initKey)
+      streams.setNextTrial(nextKey)
     }
     device.start()
   })
@@ -97,13 +96,13 @@ app.on('ready', function() {
 
   ipcMain.on('advance', function () {
     console.log('advance')
-    experiment.advanceTrial()
+    streams.advanceTrial()
   })
 
   var nextKey = null
   ipcMain.on('nextTrial', function (event, key) {
     nextKey = key
-    experiment.setNextTrial(key)
+    streams.setNextTrial(key)
   })
 
   var loggingFlag = false
@@ -142,13 +141,13 @@ app.on('ready', function() {
     })
   })
 
-  trialStream.on('data', function (data) {
+  streams.trial.on('data', function (data) {
     if (!data.init) mainWindow.webContents.send('nextTrial', data.trial.key)
   })
 
   mainWindow.on('close', function () {
     behaviorStream.pause()
-    trialStream.pause()
+    streams.trial.pause()
   })
 })
 
