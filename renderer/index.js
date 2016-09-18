@@ -1,6 +1,7 @@
 var IPCStream = require('electron-ipc-stream')
-var ipcsD = new IPCStream('behavior')
+var ipcsB = new IPCStream('behavior')
 var ipcsT = new IPCStream('trial')
+var ipcsU = new IPCStream('ui')
 var ipcRenderer = require('electron').ipcRenderer
 var program = require('commander')
 var process = require('electron').remote.process
@@ -26,8 +27,9 @@ var stream = null
 var waiting = true
 ipcsT.on('data', function (data) {
   if (waiting) {
-    stream = viz.createStream(data.maze)
-    ipcsD.pipe(stream)
+    stream = viz.create(data.maze)
+    ipcsB.pipe(stream)
+    viz.ui.pipe(ipcsU)
     waiting = false
   } else {
     viz.updateTrial(data.maze)

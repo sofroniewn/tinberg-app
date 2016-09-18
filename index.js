@@ -56,9 +56,11 @@ app.on('ready', function() {
 
   var ipcsTrials = new ipcStream('trial', mainWindow)
   var ipcsBehavior = new ipcStream('behavior', mainWindow)
+  var ipcsUI = new ipcStream('ui', mainWindow)
 
   behaviorStream.pipe(ipcsBehavior)
   streams.trial.pipe(ipcsTrials)
+  ipcsUI.pipe(streams.ui)
 
   mainWindow.webContents.on('did-finish-load', function () {
     mainWindow.webContents.send('initList', Object.keys(trials))
