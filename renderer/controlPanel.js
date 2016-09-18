@@ -1,13 +1,22 @@
 var ipcRenderer = require('electron').ipcRenderer
 var debounce = require('lodash.debounce')
+var css = require('dom-css')
+
 
 module.exports = function () {
   var controlPanel = document.createElement('div')
-  controlPanel.width = 200
-  controlPanel.height = 800
-  controlPanel.style.float = 'left'
-  controlPanel.style.marginLeft = '5px'
+  css(controlPanel, {
+    float: 'left',
+    width: '200px',
+    height: '800px',
+    margin: '0px',
+    border: '0px',
+    padding: '20px',
+    backgroundColor: '#F0F8FF'
+  })
   document.body.appendChild(controlPanel)
+
+
 
   var reset = document.createElement('BUTTON')
   var resetText = document.createTextNode('reset')
@@ -23,6 +32,23 @@ module.exports = function () {
   controlPanel.appendChild(play)
 
 
+  var advance = document.createElement('BUTTON')
+  var advanceT = document.createTextNode('advance')
+  advance.appendChild(advanceT)
+  controlPanel.appendChild(advance)
+  function advanceFunc() {
+    ipcRenderer.send('advance')
+  }
+  advance.onclick = advanceFunc
+  advance.disabled = true
+
+
+
+  var br = document.createElement('br')
+  controlPanel.appendChild(br)
+
+
+
   controlPanel.appendChild(document.createTextNode('logging'))
   var logging = document.createElement('INPUT')
   logging.setAttribute('type', 'checkbox')
@@ -30,6 +56,9 @@ module.exports = function () {
   logging.onclick = function () {
     ipcRenderer.send('logging', logging.checked)
   }
+
+  var br2 = document.createElement('br')
+  controlPanel.appendChild(br2)
 
   controlPanel.appendChild(document.createTextNode('session'))
   var number = document.createElement('INPUT')
@@ -44,16 +73,6 @@ module.exports = function () {
     number.value = data
   })
 
-
-  var advance = document.createElement('BUTTON')
-  var advanceT = document.createTextNode('advance')
-  advance.appendChild(advanceT)
-  controlPanel.appendChild(advance)
-  function advanceFunc() {
-    ipcRenderer.send('advance')
-  }
-  advance.onclick = advanceFunc
-  advance.disabled = true
 
 
   var listOfAllTrials = []

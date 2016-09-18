@@ -25,10 +25,12 @@ var BrowserWindow = electron.BrowserWindow
 var mainWindow = null
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1780,
-    height: 836,
+    resizable: false,
+    width: 1440,
+    height: 822,
     x: 0,
-    y: 0
+    y: 0,
+    title: path.basename(program.experiment)
   })
   mainWindow.loadURL(`file://${__dirname}/renderer/index.html`)
 
@@ -47,7 +49,6 @@ var deviceStream = device.create()
   
 var behaviorStream = deviceStream.pipe(streams.behavior)
 behaviorStream.pipe(deviceStream)
-
 
 var logging = require('time-stream')
 
