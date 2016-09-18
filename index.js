@@ -41,7 +41,7 @@ function createWindow() {
 var experiment = require(program.experiment)
 var trials = experiment.trials()
 var encoders = experiment.encoders()
-var streams = experiment.create()
+var streams = experiment.core()
 var device = require(program.device)()
 var deviceStream = device.create()
   
@@ -82,8 +82,8 @@ app.on('ready', function() {
   ipcMain.on('play', function () {
     console.log('play')
     if (resetFlag) {
-      streams.startTrial(trials[initKey])
-      streams.setNextTrial(trials[nextKey])
+      streams.start(trials[initKey])
+      streams.next(trials[nextKey])
     }
     device.start()
   })
@@ -96,13 +96,13 @@ app.on('ready', function() {
 
   ipcMain.on('advance', function () {
     console.log('advance')
-    streams.advanceTrial()
+    streams.advance()
   })
 
   var nextKey = null
   ipcMain.on('nextTrial', function (event, key) {
     nextKey = key
-    streams.setNextTrial(trials[key])
+    streams.next(trials[key])
   })
 
   var loggingFlag = false

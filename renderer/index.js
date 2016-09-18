@@ -1,8 +1,7 @@
 var IPCStream = require('electron-ipc-stream')
-var ipcsB = new IPCStream('behavior')
-var ipcsT = new IPCStream('trial')
-var ipcsU = new IPCStream('ui')
-var ipcRenderer = require('electron').ipcRenderer
+var ipcsBehavior = new IPCStream('behavior')
+var ipcsTrial = new IPCStream('trial')
+var ipcsUI = new IPCStream('ui')
 var program = require('commander')
 var process = require('electron').remote.process
 
@@ -12,26 +11,10 @@ program
   .option('-l, --logging [name]', 'Name of logging', './logs')
   .parse(process.argv)
 
-console.log('Launching app with:')
-console.log('  -e', program.experiment)
-console.log('  -d', program.device)
-console.log('  -l', program.logging)
-
-
-
 var controlPanel = require('./controlPanel.js')()
 var experiment = require('../' + program.experiment)
-var viz = experiment.visualization()
+var streams = experiment.visualization()
 
-var stream = null
-var waiting = true
-ipcsT.on('data', function (data) {
-  if (waiting) {
-    stream = viz.create(data.maze)
-    ipcsB.pipe(stream)
-    viz.ui.pipe(ipcsU)
-    waiting = false
-  } else {
-    viz.updateTrial(data.maze)
-  }
-})
+ipcsBehavior.pipe(streams.behavior)
+ipcsTrial.pipe(streams.trial)
+streams.ui.pipe(ipcsUI)
