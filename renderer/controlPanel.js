@@ -7,7 +7,7 @@ module.exports = function () {
   var controlPanel = document.createElement('div')
   css(controlPanel, {
     float: 'left',
-    width: '200px',
+    width: '210px',
     height: '800px',
     margin: '0px',
     border: '0px',
@@ -60,6 +60,14 @@ module.exports = function () {
   var br2 = document.createElement('br')
   controlPanel.appendChild(br2)
 
+  controlPanel.appendChild(document.createTextNode('random'))
+  var random = document.createElement('INPUT')
+  random.setAttribute('type', 'checkbox')
+  controlPanel.appendChild(random)
+
+  var br3 = document.createElement('br')
+  controlPanel.appendChild(br3)
+
   controlPanel.appendChild(document.createTextNode('session'))
   var number = document.createElement('INPUT')
   number.setAttribute('type', 'number')
@@ -88,34 +96,87 @@ module.exports = function () {
   })
 
   var curTrial = 0
-
   var trialOrder = []
   var order = document.createElement('OL')
   order.start = 0
-  ipcRenderer.on('initOrder', function (event, data) {
-    trialOrder = data
-    trialOrder.forEach(function (el) {
+  var keyV = 0
+  var repV = -1
+
+  function newTrialName () {
+    if (!random.checked) {
+      repV++
+      if (repV >= parseInt(listSelected.childNodes[keyV].getElementsByTagName('INPUT')[0].value, 10)) {
+        keyV++
+        repV = 0
+      }
+      if (keyV >= listSelected.childNodes.length) {
+        keyV = 0
+      }
+      return listSelected.childNodes[keyV].textContent
+    } else {
+      console.log('hllooee')
+      var partitions = listArray.childNodes.map(function (el) {
+        return 10
+        //return parseInt(el.getElementsByTagName('INPUT')[0].value, 10)
+      })
+      console.log(partitions)
+      // var cumsum = [];
+      // partitions.reduce(function(a,b,i) {
+      //   return cumsum[i] = a+b
+      // }, 0)
+      // var ind = Math.round(Math.random()*cumsum[cumsum.length-1])
+      // var keyVR = cumsum.findIndex(function (el) {
+      //   return (el - ind) >= 0
+      // })
+      return listSelected.childNodes[0].textContent
+    }
+  }
+
+  function addTrial () {
+    var trial = document.createElement('LI')
+    trial.appendChild(document.createTextNode(newTrialName()))
+    order.appendChild(trial)
+  }
+
+  var listOfSelectedTrials = []
+  var listSelected = document.createElement('UL')
+  
+  ipcRenderer.on('initList', function (event, data) {
+    listOfSelectedTrials = data
+    listOfSelectedTrials.forEach(function (el) {
       var trial = document.createElement('LI')
-      trial.appendChild(document.createTextNode(listOfAllTrials[el]))
-      order.appendChild(trial)
+      trial.appendChild(document.createTextNode(el))
+      var numberR = document.createElement('INPUT')
+      numberR.setAttribute('type', 'number')
+      numberR.setAttribute('min', 0)
+      numberR.value = 3
+      css(numberR, {
+        width: '30px',
+        // margin: '0px',
+        // border: '0px',
+        // padding: '0px',
+        backgroundColor: '#F0F8FF'
+      })
+      trial.appendChild(numberR)
+      listSelected.appendChild(trial)
     })
+    controlPanel.appendChild(listSelected)
+    keyV = 0
+    repV = 0
+    addTrial()
+    addTrial()
+    addTrial()
     controlPanel.appendChild(order)
     ipcRenderer.send('initTrial', order.childNodes[curTrial].innerHTML)
     ipcRenderer.send('nextTrial', order.childNodes[curTrial+1].innerHTML)
   })
-
-  var toAdd = 1
 
   function nextTrial () {
     order.childNodes[curTrial].style.color = 'gray'
     curTrial++
     ipcRenderer.send('nextTrial', order.childNodes[curTrial+1].innerHTML)
     order.childNodes[curTrial].style.color = 'red'
-    trial = document.createElement('LI')
-    trial.appendChild(document.createTextNode(listOfAllTrials[toAdd]))
-    toAdd++
-    toAdd = toAdd%2
-    order.appendChild(trial)
+    addTrial()
   }
   ipcRenderer.on('nextTrial', nextTrial)
 
@@ -142,9 +203,17 @@ module.exports = function () {
 
   reset.onclick = function () {
     ipcRenderer.send('reset')
-    order.childNodes.forEach(function (el) {
-      el.style.color = 'black'
-    })
+    // order.childNodes.forEach(function (el) {
+    //   el.style.color = 'black'
+    // })
+    while (order.firstChild) {
+      order.removeChild(order.firstChild)
+    }
+    keyV = 0
+    repV = -1
+    addTrial()
+    addTrial()
+    addTrial()
     curTrial = 0
     //list.childNodes[curTrial].style.color = 'black'
     ipcRenderer.send('initTrial', order.childNodes[curTrial].innerHTML)

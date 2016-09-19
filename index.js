@@ -117,12 +117,12 @@ app.on('ready', function() {
       console.log('start logs', sessionNumber)
       var savePath = program.logging + '/' + leftPad(sessionNumber, 6, 0) + '/behavior'
       mkdirp(savePath)
-      if (loggingDataStream !== null) behaviorStream.unpipe(loggingDataStream)
+      if (loggingDataStream !== null) streams.behavior.unpipe(loggingDataStream)
       loggingDataStream = logging.createWriteStream(savePath + '/behavior.data', encoders.behavior.Data)
-      behaviorStream.pipe(loggingDataStream)
-      if (loggingTrialStream !== null) trialStream.unpipe(loggingTrialStream)
+      streams.behavior.pipe(loggingDataStream)
+      if (loggingTrialStream !== null) streams.trial.unpipe(loggingTrialStream)
       loggingTrialStream = logging.createWriteStream(savePath + '/trial.data', encoders.trial.Data)
-      trialStream.pipe(loggingTrialStream)
+      streams.trial.pipe(loggingTrialStream)
     }
   })
 
