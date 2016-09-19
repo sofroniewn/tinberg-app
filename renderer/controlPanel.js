@@ -115,20 +115,21 @@ module.exports = function () {
       return listSelected.childNodes[keyV].textContent
     } else {
       console.log('hllooee')
-      var partitions = listArray.childNodes.map(function (el) {
-        return 10
-        //return parseInt(el.getElementsByTagName('INPUT')[0].value, 10)
+      var partitions = []
+      listSelected.childNodes.forEach(function (el) {
+        partitions.push(parseInt(el.getElementsByTagName('INPUT')[0].value, 10))
       })
-      console.log(partitions)
-      // var cumsum = [];
-      // partitions.reduce(function(a,b,i) {
-      //   return cumsum[i] = a+b
-      // }, 0)
-      // var ind = Math.round(Math.random()*cumsum[cumsum.length-1])
-      // var keyVR = cumsum.findIndex(function (el) {
-      //   return (el - ind) >= 0
-      // })
-      return listSelected.childNodes[0].textContent
+      var cumsum = [];
+      partitions.reduce(function(a,b,i) {
+        return cumsum[i] = a+b
+      }, 0)
+
+      var ind = Math.floor(Math.random()*cumsum[cumsum.length-1])
+      var keyVR = cumsum.findIndex(function (el) {
+        return (el - ind) > 0
+      })
+      console.log(partitions, cumsum, ind, keyVR)
+      return listSelected.childNodes[keyVR].textContent
     }
   }
 
@@ -162,7 +163,7 @@ module.exports = function () {
     })
     controlPanel.appendChild(listSelected)
     keyV = 0
-    repV = 0
+    repV = -1
     addTrial()
     addTrial()
     addTrial()
