@@ -148,7 +148,7 @@ module.exports = function () {
       trial.appendChild(document.createTextNode(el))
       var numberR = document.createElement('INPUT')
       numberR.setAttribute('type', 'number')
-      numberR.setAttribute('min', 0)
+      numberR.setAttribute('min', 1)
       numberR.value = 3
       css(numberR, {
         width: '30px',
