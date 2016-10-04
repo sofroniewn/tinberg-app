@@ -141,7 +141,7 @@ module.exports = function () {
 
   var listOfSelectedTrials = []
   var listSelected = document.createElement('UL')
-  
+
   ipcRenderer.on('initList', function (event, data) {
     listOfSelectedTrials = data
     listOfSelectedTrials.forEach(function (el) {
