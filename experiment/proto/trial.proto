@@ -1,0 +1,5 @@
+package trial;
+
+message Data {
+ required int32 trial=1;
+}

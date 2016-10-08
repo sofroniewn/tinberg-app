@@ -1,0 +1,9 @@
+package behavior;
+
+message Data {
+  required bool r=1;
+  required bool c=2;
+  required float deltaTime=3;
+  required float time=4;
+  required uint32 date=5;
+}
