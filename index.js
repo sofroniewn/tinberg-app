@@ -46,7 +46,7 @@ var encoders = experiment.encoders()
 var streams = experiment.core()
 var device = require(program.device)()
 var deviceStream = device.create()
-  
+
 var behaviorStream = deviceStream.pipe(streams.behavior)
 behaviorStream.pipe(deviceStream)
 
@@ -91,7 +91,7 @@ app.on('ready', function() {
 
   ipcMain.on('pause', function () {
     console.log('pause')
-    resetFlag = false 
+    resetFlag = false
     device.stop()
   })
 
@@ -107,7 +107,7 @@ app.on('ready', function() {
   })
 
   var loggingFlag = false
-  var sessionNumber = 0  
+  var sessionNumber = 0
   var loggingDataStream = null
   var loggingTrialStream = null
   ipcMain.on('logging', function (event, data) {
