@@ -5,9 +5,9 @@ var writer = require('to2')
 module.exports = function () {
   var uiStream = from.obj(function () {})
 
-  raf(function tick() {
-    raf(tick)
-  })
+  // raf(function tick() {
+  //   raf(tick)
+  // })
 
   return {
     behavior: writer.obj(function (data, enc, callback) {

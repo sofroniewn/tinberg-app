@@ -17,7 +17,7 @@ module.exports = function () {
   return {
     create: function () {
       var writableStream = writer.obj(function(data, enc, callback) {
-        console.log(data)
+        //console.log(data)
         callback()
       })
       return duplexify.obj(writableStream, readableStream)
@@ -30,7 +30,7 @@ module.exports = function () {
           if (tty.keysDown['C']) results.c = true
           else results.c = false
           readableStream.push(results)
-        }, '', '2m')
+        }, '', '1m')
         started = true
       }
     },

@@ -9,7 +9,7 @@ module.exports = function create () {
   var results = {
     r: false,
     c: false,
-    deltaTime: 0,
+    delta: 0,
     time: 0,
     date: Date.now()
   }
@@ -26,8 +26,7 @@ module.exports = function create () {
       curTime = now()
       results.r = data.r
       results.c = data.c
-      results.date = Date.now()
-      results.deltaTime = curTime - prevTime
+      results.delta = curTime - prevTime
       results.time = curTime - startTime
       prevTime = curTime
 
@@ -43,6 +42,7 @@ module.exports = function create () {
     },
     start: function(maze) {
       startTime = null
+      results.date = Date.now()
     }
   }
 }
