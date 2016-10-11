@@ -19,9 +19,9 @@ To launch the app with custom a `experiment` and `device` use the `-e` and `-d` 
 ```
 electron index.js -e ../tinberg-exp-mvr -d ../tinberg-dev-mvr-stdin
 ```
-Currently the only supported additional `experiment` is [tinberg-exp-mvr](https://github.com/sofroniewn/tinberg-exp-mvr).
+Currently the only additional `experiment` is [tinberg-exp-mvr](https://github.com/sofroniewn/tinberg-exp-mvr).
 
-Currently the only supported additional `device` is [tinberg-dev-mvr-stdin](https://github.com/sofroniewn/tinberg-dev-mvr-stdin)
+Currently the only additional `device` is [tinberg-dev-mvr-stdin](https://github.com/sofroniewn/tinberg-dev-mvr-stdin)
 
 ## License
 MIT
