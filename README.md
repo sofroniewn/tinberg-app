@@ -14,7 +14,7 @@ To launch the app with the default `experiment` and `device` (for basic benchmar
 electron index.js
 ```
 
-To launch the app with custom a `experiment` and `device` use the `-e` and `-d` inputs followed by paths to the relevant `experiment` and `device` modules.
+To launch the app with custom a `experiment` and `device` use the `-e` and `-d` inputs followed by paths to the relevant `experiment` and `device` packages.
 
 ```
 electron index.js -e ../tinberg-exp-mvr -d ../tinberg-dev-mvr-stdin
