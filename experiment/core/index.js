@@ -36,11 +36,11 @@ module.exports = function create () {
     ui: writer.obj(function(data, enc, callback) {
       callback()
     }),
-    next: function(maze) {
+    next: function() {
     },
     advance: function() {
     },
-    start: function(maze) {
+    start: function() {
       startTime = null
       results.date = Date.now()
     }
