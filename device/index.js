@@ -30,7 +30,7 @@ module.exports = function () {
           if (tty.keysDown['C']) results.c = true
           else results.c = false
           readableStream.push(results)
-        }, '', '1m')
+        }, '', '500u')
         started = true
       }
     },

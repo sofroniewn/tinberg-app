@@ -39,7 +39,7 @@ function createWindow() {
   })
 }
 
-
+var experiment = require('../tinberg-exp-mvr')
 var experiment = require(program.experiment)
 var trials = experiment.trials()
 var encoders = experiment.encoders()
