@@ -1,7 +1,7 @@
 var ipcRenderer = require('electron').ipcRenderer
 var debounce = require('lodash.debounce')
 var css = require('dom-css')
-
+var Sortable = require('sortablejs')
 
 module.exports = function () {
   var controlPanel = document.createElement('div')
